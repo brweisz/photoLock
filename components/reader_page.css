@@ -10,6 +10,7 @@
     align-items: center;
     width: 100%;
     height: 100%;
+    padding-top: 20px;
 }
 
 .photo-frame {
@@ -33,6 +34,7 @@
     justify-content: flex-start;
     width: 100%;
     height: 20px;
+    align-items: center;
 }
 
 .hidden {
@@ -64,6 +66,9 @@
     box-shadow: 0 0 0 2px rgba(0,0,0,.2), 0 3px 8px 0 rgba(0,0,0,.15);
 }
 
+.verify-button:disabled {
+    background-color: #999999;
+}
 
 
 .button-verified {
