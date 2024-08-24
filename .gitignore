@@ -48,6 +48,12 @@ proofs
 # noir
 crs
 
+# Witness file
+circuit/Prover.toml
+
+# Idea
+.idea
+
 # other
 .vscode
 .DS_Store
