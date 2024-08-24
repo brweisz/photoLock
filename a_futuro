@@ -1,0 +1,11 @@
+Principal:
+- Solucionar el problema de verificar el contrato desde la cuenta de metamask
+- Mover la generación de la prueba y el código de solidity al server
+- Permitir operar en otras redes
+
+Detalles:
+- Solucionar el problema de conectar/desconectar de Metamask
+- Evitar el uso de async/await en el front
+- Spinner en más lugares
+- Toasts en más lugares
+- No tener hardcodeada la ABI

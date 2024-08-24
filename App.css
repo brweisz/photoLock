@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css?family=Libre%20Bodoni:700|Libre%20Bodoni:400');
+@import url('https://fonts.googleapis.com/css?family=Mystery%20Quest:700|Mystery%20Quest:400');
+@import url('https://fonts.googleapis.com/css?family=Henny%20Penny:700|Henny%20Penny:400');
+
+.faded {
+  opacity: 0.5;
+}
+
+:root {
+  --text: #0b0a10;
+  --background: #f3f2f8;
+  --primary: #6a5cad;
+  --secondary: #aca4d5;
+  --accent: #897ccb;
+}
+
+body {
+  font-family: 'Libre Bodoni', serif;
+  font-weight: 400;
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Libre Bodoni', serif;
+  font-weight: 600;
+  margin: 20px 0 0 0;
+  color: var(--text);
+}
+
+p {
+  color: var(--text);
+  margin: 0;
+}
+
+i {
+  color: var(--accent);
+}
+
+html {font-size: 100%;} /* 16px */
+
+h1 {font-size: 4.210rem; /* 67.36px */}
+
+h2 {font-size: 3.158rem; /* 50.56px */}
+
+h3 {font-size: 2.369rem; /* 37.92px */}
+
+h4 {font-size: 1.777rem; /* 28.48px */}
+
+h5 {font-size: 1.333rem; /* 21.28px */}
+
+small {font-size: 0.750rem; /* 12px */}
+
+.funky-typography {
+  font-family: 'Henny Penny', fantasy;
+  /*font-family: 'Mystery Quest', fantasy;*/
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--background);
+  padding-bottom: 80px;
+}
+
+.inputs{
+  display: flex;
+  gap: 30px;
+}
+
+.verify-button-container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.text-input {
+  border: 1px solid black;
+  border-radius: 5px;
+  height: 30px;
+  width: 70px;
+  text-align: center;
+}
+
+.program-container {
+  display: flex;
+  gap: 100px;
+}
+
+textarea {
+  width: 350px;
+  height: 100px;
+}
+
+textarea:focus, input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 5px rgba(74, 144, 226, 0.8);
+  outline: none;
+}
+
+.button {
+  background-color: var(--accent);
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 5px #999;
+}
+
+.button:disabled {
+  color: #d01f00;
+}
+
+.prove-button {
+  height: 30px;
+  width: 300px;
+}
+
+.verify-button {
+  height: 30px;
+  width: 200px;
+}
+
+.actions-section {
+  display: flex;
+  gap: 20px;
+}
+
+.column-workflow {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.spinner-button {
+  display: none;
+  width: 20px;
+  height: 20px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  50% {transform: rotate(180deg)}
+  100% { transform: rotate(360deg); }
+}
+
+.button:hover {
+  background-color: var(--secondary);
+}
+
+.button:active {
+  background-color:  var(--secondary);
+  box-shadow: 2px 2px #666;
+  transform: translateY(4px);
+}
+
+.spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.contract-address {
+  font-size: 10px;
+}
+
+.prove-options {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.prove-server-options{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 20px;
+}
