@@ -1,15 +1,15 @@
 use std::hash::poseidon2;
 
-fn main(img: [Field; 80]) {
+fn main(img: [Field; 80]) -> Field {
   let sum_of_row: [Field; 8] = [
-    original[0] + original[1] + original[2] + original[3] + original[4] + original[5] + original[6] + original[7] + original[8] + original[9],
-    original[10] + original[11] + original[12] + original[13] + original[14] + original[15] + original[16] + original[17] + original[18] + original[19],
-    original[20] + original[21] + original[22] + original[23] + original[24] + original[25] + original[26] + original[27] + original[28] + original[29],
-    original[30] + original[31] + original[32] + original[33] + original[34] + original[35] + original[36] + original[37] + original[38] + original[39],
-    original[40] + original[41] + original[42] + original[43] + original[44] + original[45] + original[46] + original[47] + original[48] + original[49],
-    original[50] + original[51] + original[52] + original[53] + original[54] + original[55] + original[56] + original[57] + original[58] + original[59],
-    original[60] + original[61] + original[62] + original[63] + original[64] + original[65] + original[66] + original[67] + original[68] + original[69],
-    original[70] + original[71] + original[72] + original[73] + original[74] + original[75] + original[76] + original[77] + original[78] + original[79],
+    img[0] + img[1] + img[2] + img[3] + img[4] + img[5] + img[6] + img[7] + img[8] + img[9],
+    img[10] + img[11] + img[12] + img[13] + img[14] + img[15] + img[16] + img[17] + img[18] + img[19],
+    img[20] + img[21] + img[22] + img[23] + img[24] + img[25] + img[26] + img[27] + img[28] + img[29],
+    img[30] + img[31] + img[32] + img[33] + img[34] + img[35] + img[36] + img[37] + img[38] + img[39],
+    img[40] + img[41] + img[42] + img[43] + img[44] + img[45] + img[46] + img[47] + img[48] + img[49],
+    img[50] + img[51] + img[52] + img[53] + img[54] + img[55] + img[56] + img[57] + img[58] + img[59],
+    img[60] + img[61] + img[62] + img[63] + img[64] + img[65] + img[66] + img[67] + img[68] + img[69],
+    img[70] + img[71] + img[72] + img[73] + img[74] + img[75] + img[76] + img[77] + img[78] + img[79],
   ];
   poseidon2::Poseidon2::hash(sum_of_row, sum_of_row.len())
 }

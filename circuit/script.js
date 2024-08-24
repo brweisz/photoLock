@@ -2,7 +2,7 @@ import fs from 'fs';
 
 // DEFAULT VALUES
 const ORIG_ROWS = 8;
-const ORIG_COLS = 10;
+const ORIG_COLS = 50;
 const CROPPED_ROWS = 3;
 const CROPPED_COLS = 4;
 const OFFSET_ROWS = 1;
@@ -10,12 +10,12 @@ const OFFSET_COLS = 5;
 
 const circuitToComputeHash = (rows, cols) => {
   let noirCodeString = `use std::hash::poseidon2;\n
-fn main(img: [Field; ${rows * cols}]) {
+fn main(img: [Field; ${rows * cols}]) -> pub Field {
   let sum_of_row: [Field; ${rows}] = [`;
   for (let i = 0; i < rows; i++) {
     let rowString = `\n    `;
     for (let j = 0; j < cols; j++) {
-      rowString += `original[${i*cols + j}] + `;
+      rowString += `img[${i*cols + j}] + `;
     }
     rowString = rowString.slice(0, -3);
     noirCodeString += rowString + `,`;
