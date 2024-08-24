@@ -20,7 +20,7 @@ fn main(original: [Field; ${orig_rows * orig_cols}],
         hash: Field) {
   // verify hash
   // first sum the values of each row
-  let sum_of_row: [Field; ${orig_rows}];`;
+  let mut sum_of_row: [Field; ${orig_rows}];`;
   for (let i = 0; i < orig_rows; i++) {
     noirCodeString += `\n  sum_of_row[${i}] = `;
     for (let j = 0; j < orig_cols; j++) {
@@ -43,7 +43,7 @@ fn main(original: [Field; ${orig_rows * orig_cols}],
   return noirCodeString;
 }
 
-const outputPath = "./script_res.nr";
+const outputPath = "./main.nr";
 const noirText = convertToNoir(ORIG_ROWS, ORIG_COLS, CROPPED_ROWS, CROPPED_COLS, OFFSET_ROWS, OFFSET_COLS);
 
 fs.writeFile(outputPath, noirText, (err) => {
