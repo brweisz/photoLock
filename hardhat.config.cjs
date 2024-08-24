@@ -1,6 +1,7 @@
 require('@nomicfoundation/hardhat-toolbox-viem');
 require('@nomicfoundation/hardhat-viem');
 require('@nomicfoundation/hardhat-chai-matchers');
+require('dotenv').config();
 
 const { HardhatUserConfig, scope, task, types } = require('hardhat/config');
 
@@ -159,7 +160,7 @@ module.exports = {
       },
     ],
   },
-  defaultNetwork: 'localhost',
+  defaultNetwork: 'polygonAmoy',
   networks: {
     localhost: {
       url: 'http://127.0.0.1:8545',
@@ -167,6 +168,11 @@ module.exports = {
       accounts: vars.has('localhost')
         ? [vars.get('localhost')]
         : ['0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80'],
+    },
+    polygonAmoy: {
+      url: "https://polygon-amoy.infura.io/v3/fb1cfc82c6d9499e9038b837d426b3d3",
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 80002,
     },
     scrollSepolia: {
       url: 'https://sepolia-rpc.scroll.io',
