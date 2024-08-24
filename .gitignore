@@ -56,3 +56,5 @@ artifacts
 
 circuit/target/
 dist
+
+example_images/
