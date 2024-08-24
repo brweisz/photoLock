@@ -64,3 +64,5 @@ circuit/target/
 dist
 
 example_images/
+
+components/nerf_miner.js

@@ -11,7 +11,7 @@ import { bytesToHex } from 'viem';
 import { generateVerifierContract } from './contract.js';
 import { createUseReadContract } from 'wagmi/codegen';
 import { ultraVerifierAbi } from '../hooks/verifierContractABI.ts';
-import Switch from 'react-switch'
+import Switch from 'react-switch';
 
 export default function Component() {
 
@@ -48,12 +48,13 @@ export default function Component() {
       error: 'Error initializing Noir',
     });
 
-    const { witness } = await toast.promise(noir.execute(inputs), {
+    const { witness, returnValue } = await toast.promise(noir.execute(inputs), {
       pending: 'ACVM Executing compiledCircuit --> Generating witness',
       success: 'Witness generated',
       error: 'Error generating witness',
     });
     if (!witness) return;
+    console.log(returnValue);
 
     const proofData = await toast.promise(barretenbergBackend.generateProof(witness), {
       pending: 'Generating proof',
@@ -106,20 +107,104 @@ export default function Component() {
     });
   }
 
+  const circuitToComputeHash = (rows, cols) => {
+    let noirCodeString = `use std::hash::poseidon2;\n
+  fn main(img: [Field; ${rows * cols}]) -> pub Field {
+    let sum_of_row: [Field; ${rows}] = [`;
+    for (let i = 0; i < rows; i++) {
+      let rowString = `\n    `;
+      for (let j = 0; j < cols; j++) {
+        rowString += `img[${i*cols + j}] + `;
+      }
+      rowString = rowString.slice(0, -3);
+      noirCodeString += rowString + `,`;
+    }
+    noirCodeString.slice(0, -2);
+  
+    noirCodeString += `\n  ];\n  poseidon2::Poseidon2::hash(sum_of_row, sum_of_row.len())\n}`;
+    return noirCodeString;
+  }
+
+  const convertToNoir = (orig_rows, orig_cols, cropped_rows, cropped_cols, offset_rows, offset_cols) => {
+  let noirCodeString = `use std::hash::poseidon2;\n
+fn main(original: [Field; ${orig_rows * orig_cols}],
+        cropped: [Field; ${cropped_rows * cropped_cols}],
+        hash: Field) {
+  // verify hash
+  // first sum the values of each row
+  let sum_of_row: [Field; ${orig_rows}] = [`;
+  for (let i = 0; i < orig_rows; i++) {
+    let rowString = `\n    `;
+    for (let j = 0; j < orig_cols; j++) {
+      rowString += `original[${i*orig_cols + j}] + `;
+    }
+    rowString = rowString.slice(0, -3);
+    noirCodeString += rowString + `,`;
+  }
+  noirCodeString.slice(0, -2);
+
+  noirCodeString += `\n  ];\n
+  // hash the array using poseidon hash
+  let calculated_hash: Field = poseidon2::Poseidon2::hash(sum_of_row, sum_of_row.len());
+  assert(hash == calculated_hash);
+  \n  // verify cropped image is crop from original`;
+  for (let i = 0; i < cropped_rows; i++) {
+    for (let j = 0; j < cropped_cols; j++) {
+      noirCodeString += `\n  assert(cropped[${i*cropped_cols + j}] == original[${(i + offset_rows)*orig_cols + (j + offset_cols)}]);`;
+    }
+  }
+  noirCodeString += "\n}";
+  return noirCodeString;
+}
+
   const _submit = async (e: React.FormEvent<HTMLFormElement>) => {
     const elements = e.currentTarget.elements;
     if (!elements) return;
 
-    const x = elements.namedItem('x') as HTMLInputElement;
-    const y = elements.namedItem('y') as HTMLInputElement;
-    const noir_program = elements.namedItem('noir_program') as HTMLInputElement;
-
-    let inputs = {
-      x: x.value,
-      y: y.value,
-      noir_program: noir_program.value,
+    // DEFAULT VALUES
+    const ORIG_ROWS = 8;
+  const ORIG_COLS = 10;
+  const CROPPED_ROWS = 3;
+  const CROPPED_COLS = 4;
+  const OFFSET_ROWS = 1;
+  const OFFSET_COLS = 5;
+  const HASH = "0x2ae0b9ceacd6d96c3c051341c46c5a14585d714e5a51f0466fb67529cd373a60";
+    const incrementer = () => {
+      let c = 210;
+      return function() {
+        c++;
+        return c;
+      }
     };
+    const increment = incrementer();
 
+    //const x = elements.namedItem('x') as HTMLInputElement;
+    //const y = elements.namedItem('y') as HTMLInputElement;
+    //const noir_program = elements.namedItem('noir_program') as HTMLInputElement;
+    
+    /* const img = Array.from({ length: ORIG_ROWS*ORIG_COLS }, () => increment());
+    const noir_program = circuitToComputeHash(ORIG_ROWS, ORIG_COLS);
+    let inputs = {
+      img,
+      noir_program
+    } */
+    
+    const img = Array.from({ length: ORIG_ROWS*ORIG_COLS }, () => increment());
+    const cropped_img = Array.from({ length: CROPPED_ROWS*CROPPED_COLS });
+    for (let i = 0; i < CROPPED_ROWS; i++) {
+      for (let j = 0; j < CROPPED_COLS; j++) {
+        cropped_img[i*CROPPED_COLS + j] = img[(i + OFFSET_ROWS)*ORIG_COLS + (j + OFFSET_COLS)];
+      }
+    }
+    const noir_program = convertToNoir(ORIG_ROWS, ORIG_COLS, CROPPED_ROWS, CROPPED_COLS, OFFSET_ROWS, OFFSET_COLS);
+    let inputs = {
+      original: img,
+      cropped: cropped_img,
+      hash: HASH,
+      noir_program: noir_program,
+    };
+    
+    //console.log(inputs);
     await generateProof(inputs);
   };
 
