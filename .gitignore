@@ -59,6 +59,7 @@ circuit/Prover.toml
 .DS_Store
 artifacts
 .yarn/
+yarn.lock
 
 circuit/target/
 dist

@@ -22,7 +22,7 @@ node --watch app.js
 
 run the frontend environment:
 ```bash
-vite dev
+bunx vite dev
 ```
 
 ### Deploying on other networks
