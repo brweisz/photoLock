@@ -1,16 +1,16 @@
 "use client"
-import styles from '../styles/Home.module.css'
+import './publisher_page.css'
 
 import {handlePublisherForm} from "./server"
-import ImageCropper from "@/app/ImageCropper";
+import ImageCropper from "./ImageCropper.tsx";
 
 
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 
 export default function PublisherPage(){
   return <div>
-    Hola Caro
+    {PublisherForm()}
   </div>
 }
 

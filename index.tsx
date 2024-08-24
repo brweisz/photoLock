@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Component from './components/index.js';
 import ReaderPage from './components/reader_page.jsx';
-import PublisherPage from './components/publisher_page';
+import PublisherPage from './components/publisher_page.tsx';
 import initNoirC from '@noir-lang/noirc_abi';
 import initACVM from '@noir-lang/acvm_js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';

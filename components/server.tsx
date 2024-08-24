@@ -1,9 +1,7 @@
 "use server";
 import fs from "node:fs/promises";
-import { revalidatePath } from "next/cache";
-import Jimp from "jimp";
 import {exec} from "child_process";
-import {convertPhotoToFieldElement, base64ToRgbArray, convertPhotoToBitsArray, hexToBits} from "../../circuit/utils";
+import {convertPhotoToFieldElement, base64ToRgbArray, convertPhotoToBitsArray, hexToBits} from "../circuit/utils";
 import {sha256} from "js-sha256";
 
 //@ts-ignore
