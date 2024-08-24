@@ -1,4 +1,5 @@
-# noir-dapp-custom-template
+# PhotoLock
+### Initializing the project
 1. Install dependencies:
 ```bash
 nvm use 20.10.0
@@ -23,19 +24,6 @@ run the frontend environment:
 ```bash
 vite dev
 ```
-
-### Testing
-
-You can run the [example test file](./test/index.test.ts) with
-
-```bash
-bun test
-```
-
-This test shows the basic usage of Noir in a TypeScript Node.js environment.
-
-> [!NOTE] The test is a script, not an executable (we're running `bun test` or `yarn test` instead
-> of `bunx` or `npx`). This is because the test runs its own network and executables.
 
 ### Deploying on other networks
 
