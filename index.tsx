@@ -6,24 +6,25 @@ import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import Component from './components/index.js';
+import ReaderPage from './components/reader_page.jsx';
 import initNoirC from '@noir-lang/noirc_abi';
 import initACVM from '@noir-lang/acvm_js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { defineChain, createClient } from 'viem';
 import { injected } from 'wagmi/connectors';
-import { networkConfig } from "./artifacts/deployment.json"
-
+import { networkConfig } from "./artifacts/deployment.json";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const queryClient = new QueryClient();
 
 const { id, name, nativeCurrency, rpcUrls } = networkConfig;
 const chain = defineChain({
-    id,
-    name,
-    nativeCurrency,
-    rpcUrls
-})
+  id,
+  name,
+  nativeCurrency,
+  rpcUrls
+});
 
 const config = createConfig({
   connectors: [
@@ -31,10 +32,9 @@ const config = createConfig({
   ],
   chains: [chain],
   client({ chain}) {
-    return createClient({ chain, transport: http() })
+    return createClient({ chain, transport: http() });
   }
-})
-
+});
 
 const InitWasm = ({ children }) => {
   const [init, setInit] = React.useState(false);
@@ -66,7 +66,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Providers>
     <InitWasm>
-      <Component />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Component />} />
+          <Route path="/readers" element={<ReaderPage />} />
+        </Routes>
+      </Router>
       <ToastContainer />
     </InitWasm>
   </Providers>,
