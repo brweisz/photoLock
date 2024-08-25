@@ -8,8 +8,6 @@ import { bytesToHex } from 'viem';
 
 
 export default function ReaderPage() {
-  // Todo: permitir que el usuario cargue la foto y los datos
-  // Todo: convertir la foto a field elements que comprimen los pixeles
   let { isConnected, connectDisconnectButton, address } = useOnChainVerification();
 
   return (
