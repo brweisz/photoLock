@@ -3,7 +3,7 @@
 **Integrantes**: Bruno Weisz, Lorenzo Ruiz Diaz, Caro Lang y Chino Cribioli
 
 # Warning
-El proyecto está incompleto y requiere mucho más trabajo, sobre todo en la parte de dónde se ejecutan las cosas. Actualmente se corre en localhost y requiere tener circom instalado. Por otro lado, decidimos deshabilitar el botón de compilación dado que puede generar problemas de performance. Más allá de esto, creemos que la idea es buena y tiene futuro como servicio
+Si se va a correr el proyecto, hacerlo con imagenes lo más pequeñas posibles
 
 ## TL;DR
 
@@ -75,6 +75,8 @@ Levantar el frontend:
 ```bash
 bunx vite dev
 ```
+
+Las pantalla donde se genera el recorte esta en la ruta /publisher
 
 ### Deployar en Amoy
 Hay que proveer un .env con un campo PRIVATE_KEY de la billetera de la que querramos deployar. 
