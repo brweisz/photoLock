@@ -3,7 +3,6 @@ import { Noir } from '@noir-lang/noir_js';
 
 export default async function hashPersonalizado(photoAsFieldElements, width, height){
   // Creamos el circuito
-  debugger
   let noirSourceCodeToComputeHash = circuitToComputeHash(height, width);
   const compiledCircuit = await compileCircuit(noirSourceCodeToComputeHash);
   const noir = new Noir(compiledCircuit);

@@ -12,16 +12,12 @@ import { compileCircuit } from '../circuit/compile.ts';
 import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
 import { Noir } from '@noir-lang/noir_js';
 import { toast } from 'react-toastify';
+import { generateVerifierContract } from './contract.ts';
 
 
-export default function PublisherPage() {
-  return <div>
-    {PublisherForm()}
-  </div>;
-}
+export default function PublisherForm() {
 
-function PublisherForm() {
-
+  const [currentCompiledCircuit, setCurrentCompiledCircuit] = useState();
   const [originalImage, setOriginalImage] = useState();
   const [originalImageSize, setOriginalImageSize] = useState();
 
@@ -89,7 +85,10 @@ function PublisherForm() {
 
     // ---------- CIRCUIT --------- //
     const compiledCircuit = await compileCircuit(noirSourceCode);
-    const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
+    console.log("circuit compiled")
+    await setCurrentCompiledCircuit(compiledCircuit);
+    //const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
+
     const noir = new Noir(compiledCircuit);
 
     await toast.promise(noir.init, {
@@ -98,20 +97,29 @@ function PublisherForm() {
       error: 'Error initializing Noir',
     });
 
-    const { witness } = await toast.promise(noir.execute(dataForPublicInput), {
+    /*const { witness } = await toast.promise(noir.execute(dataForPublicInput), {
       pending: 'ACVM Executing compiledCircuit --> Generating witness',
       success: 'Witness generated',
       error: 'Error generating witness',
     });
-    if (!witness) return;
+    if (!witness) return;*/
 
-    const proofData = await toast.promise(barretenbergBackend.generateProof(witness), {
+    /*const proofData = await toast.promise(barretenbergBackend.generateProof(witness), {
       pending: 'Generating proof',
       success: 'Proof generated',
       error: 'Error generating proof',
     });
 
-    console.log(proofData)
+    console.log(proofData)*/
+
+    let address = generateAndDeployContract()
+
+    let dataTheReaderNeeds = {
+      croppedImage,
+      address,
+      //proofData,
+    }
+
 
   };
 
@@ -131,6 +139,35 @@ function PublisherForm() {
     let [submitBtn, spinner] = getSpinnerElements();
     spinner.style.display = 'inline-block';
     submitBtn.disabled = true;
+  };
+
+  async function generateAndDeployContract() {
+    console.log("Deploying")
+    if (!currentCompiledCircuit) {
+      console.log("Cannot generate contract because no circuit was provided")
+      return;
+    }
+    let contractSourceCode = await generateVerifierContract(currentCompiledCircuit)
+    console.log("Contract successfully created")
+    console.log("Compiling and deploying contract")
+    let address = await compileAndDeploy(contractSourceCode)
+
+    return address
+  }
+
+  const compileAndDeploy = async (contractSourceCode) => {
+    const response = await fetch('/api/compile-and-deploy-contract', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ contractSourceCode }),
+    });
+
+    const response_data = await response.json();
+    let contractAddress = response_data.object.contractAddress;
+    console.log('Deployed contract address:', contractAddress);
+    return contractAddress
   };
 
   return (
