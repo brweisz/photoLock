@@ -45,10 +45,19 @@ function PublisherForm() {
 
     let ogPhotoDataBytes = await base64ToRgbAndSize(originalImage);
     const ogPhotoField = convertPhotoToFieldElement(ogPhotoDataBytes.rgb);
-    let originalPhotoHash = await hashPersonalizado(
+
+    const { originalPhotoHash } = await toast.promise(hashPersonalizado(
+                                                        ogPhotoField,
+                                                        originalImageSize.height,
+                                                        originalImageSize.width), {
+      pending: 'Generating compressed hash',
+      success: 'Hash generated',
+      error: 'Error generating hash',
+    });
+    /*let originalPhotoHash = await hashPersonalizado(
       ogPhotoField,
       originalImageSize.height,
-      originalImageSize.width);
+      originalImageSize.width);*/
 
     let crPhotoDataBytes = await base64ToRgbAndSize(croppedImage);
     const crPhotoField = convertPhotoToFieldElement(crPhotoDataBytes.rgb);
@@ -104,8 +113,24 @@ function PublisherForm() {
 
     console.log(proofData)
 
+  };
 
+  const getSpinnerElements = () => {
+    const spinner = document.getElementById('spinner');
+    const submitBtn = document.getElementById('submit');
+    return [submitBtn, spinner];
+  };
 
+  const deactivateSpinner = () => {
+    let [submitBtn, spinner] = getSpinnerElements();
+    spinner.style.display = 'none';
+    submitBtn.disabled = false;
+  };
+
+  const activateSpinner = () => {
+    let [submitBtn, spinner] = getSpinnerElements();
+    spinner.style.display = 'inline-block';
+    submitBtn.disabled = true;
   };
 
   return (
@@ -113,7 +138,7 @@ function PublisherForm() {
       <h1 className={'title'}>Publisher</h1>
       <form className={'formContent'} onSubmit={onSubmit}>
         <ImageCropper onOriginalImage={handleOriginalImage} onCroppedImage={handleCroppedImage} />
-C        <button type="submit" className='proveButton' disabled={!croppedImage}>Compile</button>
+        <button type="submit" className='proveButton' disabled={!croppedImage}>Compile</button>
       </form>
     </main>
   );
