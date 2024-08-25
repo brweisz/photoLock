@@ -3,7 +3,7 @@ import sharp from "sharp";
 const convertToOneElement = (rgb: [number, number, number]): number => rgb[0]*256*256 + rgb[1]*256 + rgb[2];
 export const convertPhotoToFieldElement = (photo: any) => photo.map(convertToOneElement);
 
-const convertNumberToBitsArray = (n: number): [number] => (
+const convertNumberToBitsArray = (n: number): any => (
     [7,6,5,4,3,2,1,0].map((i: number) => ((n >> i) & 1))
 );
 const convertPixelToBitsArray = (rgb: [number, number, number]): [number] => (
@@ -12,7 +12,7 @@ const convertPixelToBitsArray = (rgb: [number, number, number]): [number] => (
 export const convertPhotoToBitsArray = (photo: any) => photo.map(convertPixelToBitsArray);
 
 //@ts-ignore
-export async function base64ToRgbArray(base64String) {
+/*export async function base64ToRgbArray(base64String) {
   // Remove the data URL prefix
   const base64Data = base64String.replace(/^data:image\/[a-z]+;base64,/, "");
 
@@ -39,6 +39,9 @@ export async function base64ToRgbArray(base64String) {
     throw error;
   }
 }
+ */
+
+
 
 export const hexToBits = (hex: string): number[] => {
   const bits: number[] = [];

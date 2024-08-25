@@ -124,7 +124,7 @@ export default function Component() {
     return noirCodeString;
   }
 
-  const convertToNoir = (orig_rows, orig_cols, cropped_rows, cropped_cols, offset_rows, offset_cols) => {
+  const generateNoirSourceCodeForVerification = (orig_rows, orig_cols, cropped_rows, cropped_cols, offset_rows, offset_cols) => {
     let noirCodeString = `use std::hash::poseidon2;\n
 fn main(original: [Field; ${orig_rows * orig_cols}],
         cropped: [Field; ${cropped_rows * cropped_cols}],
@@ -177,15 +177,6 @@ fn main(original: [Field; ${orig_rows * orig_cols}],
     };
     const increment = incrementer();
 
-    /*const x = elements.namedItem('x') as HTMLInputElement;
-    const y = elements.namedItem('y') as HTMLInputElement;
-    const noir_program = elements.namedItem('noir_program') as HTMLInputElement;
-
-    let inputs = {
-      x: x.value,
-      y: y.value,
-      noir_program: noir_program.value,
-    };*/
 
     /* const img = Array.from({ length: ORIG_ROWS*ORIG_COLS }, () => increment());
     const noir_program = circuitToComputeHash(ORIG_ROWS, ORIG_COLS);
@@ -201,7 +192,7 @@ fn main(original: [Field; ${orig_rows * orig_cols}],
         cropped_img[i*CROPPED_COLS + j] = img[(i + OFFSET_ROWS)*ORIG_COLS + (j + OFFSET_COLS)];
       }
     }
-    const noir_program = convertToNoir(ORIG_ROWS, ORIG_COLS, CROPPED_ROWS, CROPPED_COLS, OFFSET_ROWS, OFFSET_COLS);
+    const noir_program = generateNoirSourceCodeForVerification(ORIG_ROWS, ORIG_COLS, CROPPED_ROWS, CROPPED_COLS, OFFSET_ROWS, OFFSET_COLS);
     let inputs = {
       original: img,
       cropped: cropped_img,
