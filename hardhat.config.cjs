@@ -62,16 +62,6 @@ async function generateArtifacts(path = './circuit', crsPath = './crs') {
   return { circuit, contract };
 }
 
-/*task('compile', 'Compile and generate circuits and contracts').setAction(
-  async (_, __, runSuper) => {
-    const { circuit, contract } = await generateArtifacts();
-    // mkdirSync('artifacts', { recursive: true });
-    writeFileSync('artifacts/circuit.json', JSON.stringify(circuit), { flag: 'w' });
-    writeFileSync('artifacts/contract.sol', contract, { flag: 'w' });
-    await runSuper();
-  },
-);*/
-
 task('node', 'Runs a local blockchain').setAction(async (_, hre, runSuper) => {
   console.log("Starting network...")
   const networkConfig = (await import(`viem/chains`))[hre.network.name];

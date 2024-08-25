@@ -85,12 +85,6 @@ export default function Component() {
   };
 
   const submit = async (e: React.FormEvent<HTMLFormElement>) => {
-    /*try {
-      await _submit(e); //TODO: not synchronous
-    } catch {
-      deactivateSpinner();
-    }*/
-    // the same as above but asynchronous?
     e.preventDefault();
     activateSpinner();
     _submit(e).then(() => {}).catch(() => {}).finally(() => {
@@ -105,24 +99,6 @@ export default function Component() {
       error: 'Error verifying proof off-chain',
     });
   }
-
- /* const circuitToComputeHash = (rows, cols) => {
-    let noirCodeString = `use std::hash::poseidon2;\n
-  fn main(img: [Field; ${rows * cols}]) -> pub Field {
-    let sum_of_row: [Field; ${rows}] = [`;
-    for (let i = 0; i < rows; i++) {
-      let rowString = `\n    `;
-      for (let j = 0; j < cols; j++) {
-        rowString += `img[${i*cols + j}] + `;
-      }
-      rowString = rowString.slice(0, -3);
-      noirCodeString += rowString + `,`;
-    }
-    noirCodeString.slice(0, -2);
-
-    noirCodeString += `\n  ];\n  poseidon2::Poseidon2::hash(sum_of_row, sum_of_row.len())\n}`;
-    return noirCodeString;
-  }*/
 
   const generateNoirSourceCodeForVerification = (orig_rows, orig_cols, cropped_rows, cropped_cols, offset_rows, offset_cols) => {
     let noirCodeString = `use std::hash::poseidon2;\n
@@ -177,13 +153,6 @@ fn main(original: [Field; ${orig_rows * orig_cols}],
     };
     const increment = incrementer();
 
-
-    /* const img = Array.from({ length: ORIG_ROWS*ORIG_COLS }, () => increment());
-    const noir_program = circuitToComputeHash(ORIG_ROWS, ORIG_COLS);
-    let inputs = {
-      img,
-      noir_program
-    } */
 
     const img = Array.from({ length: ORIG_ROWS*ORIG_COLS }, () => increment());
     const cropped_img = Array.from({ length: CROPPED_ROWS*CROPPED_COLS });
