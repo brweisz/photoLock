@@ -78,8 +78,6 @@ function PublisherForm() {
       dataForGeneratingTheCircuit.cropOffsetX,
     )
 
-    debugger
-
     // ---------- CIRCUIT --------- //
     const compiledCircuit = await compileCircuit(noirSourceCode);
     const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
@@ -106,6 +104,8 @@ function PublisherForm() {
 
     console.log(proofData)
 
+
+
   };
 
   return (
@@ -113,7 +113,7 @@ function PublisherForm() {
       <h1 className={'title'}>Publisher</h1>
       <form className={'formContent'} onSubmit={onSubmit}>
         <ImageCropper onOriginalImage={handleOriginalImage} onCroppedImage={handleCroppedImage} />
-        <button type="submit" className={'proveButton'}>Compile</button>
+C        <button type="submit" className='proveButton' disabled={!croppedImage}>Compile</button>
       </form>
     </main>
   );
