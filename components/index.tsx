@@ -12,10 +12,27 @@ import { generateVerifierContract } from './contract.js';
 import { createUseReadContract } from 'wagmi/codegen';
 import { ultraVerifierAbi } from '../hooks/verifierContractABI.ts';
 import Switch from 'react-switch'
+import { ethers } from 'ethers'
 
 export default function Component() {
-
-  let { isConnected, connectDisconnectButton, address } = useOnChainVerification();
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  provider.send('eth_requestAccounts', []);
+  const signer = provider.getSigner();
+  const myContractAddress = '0x5fbdb2315678afecb367f032d93f642f64180aa3';
+  const contract = new ethers.Contract(myContractAddress, ultraVerifierAbi, signer);
+  async function callContractMethod(proof, public_inputs) {
+    try {
+      const value = await contract.verify(proof, public_inputs);
+      console.log(`HASH: ${value.hash}`);
+      value.wait();
+      console.log(`VERIFIQUEEEE`);
+    } catch (error) {
+      console.error('Error calling contract method:', error);
+    }
+  }
+  // callContractMethod();
+  
+  let { isConnected, address, connectDisconnectButton } = useOnChainVerification();
   let [proveOnServer, setProveOnServer] = useState(false);
   const [backend, setBackend] = useState();
   let [provingArgs, setProvingArgs] = useState();
@@ -33,7 +50,9 @@ export default function Component() {
   const verifyOnChain = async function() {
     console.log("Verifying on chain")
     setArgs([bytesToHex(provingArgs.proof), provingArgs.publicInputs as `0x${string}`[]]);
-    setTimeout(()=> setArgs(undefined), 1000)}
+    callContractMethod(bytesToHex(provingArgs.proof), provingArgs.publicInputs as `0x${string}`[]);
+    setTimeout(()=> setArgs(undefined), 1000)
+  }
 
   const generateProof = async (inputs: any) => {
     if (!inputs) return;
