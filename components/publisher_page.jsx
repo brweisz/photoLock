@@ -51,10 +51,14 @@ export default function PublisherForm() {
       error: 'Error generating hash',
     });
 
-
     let crPhotoDataBytes = await base64ToRgbAndSize(croppedImage);
+    crPhotoDataBytes.rgb = [];
+    for (let i = 0; i < crPhotoDataBytes.height; i++) {
+      for (let j = 0; j < crPhotoDataBytes.width; j++) {
+        crPhotoDataBytes.rgb.push(ogPhotoDataBytes.rgb[(i + cropOffset.y)*originalImageSize.width + (j + cropOffset.x)]);
+      }
+    }
     const crPhotoField = convertPhotoToFieldElement(crPhotoDataBytes.rgb);
-
 
     let dataForGeneratingTheCircuit = {
       originalImageWidth: originalImageSize.width,
@@ -82,8 +86,7 @@ export default function PublisherForm() {
 
     // ---------- CIRCUIT --------- //
     const compiledCircuit = await compileCircuit(noirSourceCode);
-
-    //const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
+    const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
 
     const noir = new Noir(compiledCircuit);
 
@@ -93,7 +96,7 @@ export default function PublisherForm() {
       error: 'Error initializing Noir',
     });
 
-    /*const { witness } = await toast.promise(noir.execute(dataForPublicInput), {
+    const { witness } = await toast.promise(noir.execute(dataForPublicInput), {
       pending: 'ACVM Executing compiledCircuit --> Generating witness',
       success: 'Witness generated',
       error: 'Error generating witness',
@@ -106,19 +109,16 @@ export default function PublisherForm() {
       error: 'Error generating proof',
     });
 
-    console.log(proofData)*/
+    console.log(proofData)
 
-    let address = generateAndDeployContract(compiledCircuit)
+    let address = await generateAndDeployContract(compiledCircuit)
 
     let dataTheReaderNeeds = {
       croppedImage,
       address,
-      //proofData,
+      proofData
     }
-
     console.log(dataTheReaderNeeds)
-
-
   };
 
 

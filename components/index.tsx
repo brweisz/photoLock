@@ -161,6 +161,7 @@ fn main(original: [Field; ${orig_rows * orig_cols}],
         cropped_img[i*CROPPED_COLS + j] = img[(i + OFFSET_ROWS)*ORIG_COLS + (j + OFFSET_COLS)];
       }
     }
+    
     const noir_program = generateNoirSourceCodeForVerification(ORIG_ROWS, ORIG_COLS, CROPPED_ROWS, CROPPED_COLS, OFFSET_ROWS, OFFSET_COLS);
     let inputs = {
       original: img,

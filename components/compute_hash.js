@@ -8,7 +8,7 @@ export default async function hashPersonalizado(photoAsFieldElements, width, hei
   const noir = new Noir(compiledCircuit);
   await noir.init()
   let result = await noir.execute({ img: photoAsFieldElements })
-  console.log(result)
+  //console.log(result)
   return result.returnValue
 }
 
