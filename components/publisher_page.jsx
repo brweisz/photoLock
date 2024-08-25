@@ -2,12 +2,16 @@ import './publisher_page.css';
 
 import ImageCropper from './ImageCropper.tsx';
 import hashPersonalizado from './compute_hash.js';
+import generateNoirSourceCodeForVerification from './compute_full_circuit.js'
 
 import { base64ToRgbAndSize } from './utils.js';
 
 import React, { useState } from 'react';
-import { convertPhotoToBitsArray, convertPhotoToFieldElement, hexToBits } from '../circuit/utils';
-import fs from 'node:fs/promises';
+import { convertPhotoToFieldElement } from '../circuit/utils';
+import { compileCircuit } from '../circuit/compile.ts';
+import { BarretenbergBackend } from '@noir-lang/backend_barretenberg';
+import { Noir } from '@noir-lang/noir_js';
+import { toast } from 'react-toastify';
 
 
 export default function PublisherPage() {
@@ -41,7 +45,7 @@ function PublisherForm() {
 
     let ogPhotoDataBytes = await base64ToRgbAndSize(originalImage);
     const ogPhotoField = convertPhotoToFieldElement(ogPhotoDataBytes.rgb);
-    let originalPhotoHash = hashPersonalizado(
+    let originalPhotoHash = await hashPersonalizado(
       ogPhotoField,
       originalImageSize.height,
       originalImageSize.width);
@@ -60,10 +64,48 @@ function PublisherForm() {
     };
 
     let dataForPublicInput = {
-      originalImageField: ogPhotoField,
-      croppedImageField: crPhotoField,
+      original: ogPhotoField,
+      cropped: crPhotoField,
       hash: originalPhotoHash,
     };
+
+    let noirSourceCode = generateNoirSourceCodeForVerification(
+      dataForGeneratingTheCircuit.originalImageHeight,
+      dataForGeneratingTheCircuit.originalImageWidth,
+      dataForGeneratingTheCircuit.croppedImageHeight,
+      dataForGeneratingTheCircuit.croppedImageWidth,
+      dataForGeneratingTheCircuit.cropOffsetY,
+      dataForGeneratingTheCircuit.cropOffsetX,
+    )
+
+    debugger
+
+    // ---------- CIRCUIT --------- //
+    const compiledCircuit = await compileCircuit(noirSourceCode);
+    const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
+    const noir = new Noir(compiledCircuit);
+
+    await toast.promise(noir.init, {
+      pending: 'Initializing Noir...',
+      success: 'Noir initialized!',
+      error: 'Error initializing Noir',
+    });
+
+    const { witness } = await toast.promise(noir.execute(dataForPublicInput), {
+      pending: 'ACVM Executing compiledCircuit --> Generating witness',
+      success: 'Witness generated',
+      error: 'Error generating witness',
+    });
+    if (!witness) return;
+
+    const proofData = await toast.promise(barretenbergBackend.generateProof(witness), {
+      pending: 'Generating proof',
+      success: 'Proof generated',
+      error: 'Error generating proof',
+    });
+
+    console.log(proofData)
+
   };
 
   return (

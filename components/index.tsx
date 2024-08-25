@@ -106,7 +106,7 @@ export default function Component() {
     });
   }
 
-  const circuitToComputeHash = (rows, cols) => {
+ /* const circuitToComputeHash = (rows, cols) => {
     let noirCodeString = `use std::hash::poseidon2;\n
   fn main(img: [Field; ${rows * cols}]) -> pub Field {
     let sum_of_row: [Field; ${rows}] = [`;
@@ -122,7 +122,7 @@ export default function Component() {
 
     noirCodeString += `\n  ];\n  poseidon2::Poseidon2::hash(sum_of_row, sum_of_row.len())\n}`;
     return noirCodeString;
-  }
+  }*/
 
   const generateNoirSourceCodeForVerification = (orig_rows, orig_cols, cropped_rows, cropped_cols, offset_rows, offset_cols) => {
     let noirCodeString = `use std::hash::poseidon2;\n

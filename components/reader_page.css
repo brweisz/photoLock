@@ -78,9 +78,10 @@
     color: green;
     border: none;
 
-    p {
-        color: inherit;
-    }
+
 
 }
-                                          /* CSS */
+
+.button-verified > p {
+    color: inherit;
+}
