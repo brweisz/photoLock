@@ -69,8 +69,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <InitWasm>
       <Router>
         <Routes>
-          <Route path="/" element={<Component />} />
-          <Route path="/readers" element={<ReaderPage />} />
           <Route path="/publisher" element={<PublisherForm />} />
         </Routes>
       </Router>

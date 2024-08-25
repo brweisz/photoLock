@@ -84,4 +84,4 @@ Hay que proveer un .env con un campo PRIVATE_KEY de la billetera de la que querr
 ### Direcciones de contratos deployados durante el desarrollo
 * 0x10243272641976490aabBc3D2e025fa161272297
 * 0xB3c7bFFAb7A0C39502053B23DaE571EB605A4bb4
-
+* 0x82e27db4513cdfe7c287333cb212cb6aa0bae67d

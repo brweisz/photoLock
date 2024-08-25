@@ -42,7 +42,7 @@ export default function PublisherForm() {
     let ogPhotoDataBytes = await base64ToRgbAndSize(originalImage);
     const ogPhotoField = convertPhotoToFieldElement(ogPhotoDataBytes.rgb);
 
-    const { originalPhotoHash } = await toast.promise(hashPersonalizado(
+    const originalPhotoHash = await toast.promise(()=> hashPersonalizado(
                                                         ogPhotoField,
                                                         originalImageSize.height,
                                                         originalImageSize.width), {
@@ -50,10 +50,7 @@ export default function PublisherForm() {
       success: 'Hash generated',
       error: 'Error generating hash',
     });
-    /*let originalPhotoHash = await hashPersonalizado(
-      ogPhotoField,
-      originalImageSize.height,
-      originalImageSize.width);*/
+
 
     let crPhotoDataBytes = await base64ToRgbAndSize(croppedImage);
     const crPhotoField = convertPhotoToFieldElement(crPhotoDataBytes.rgb);
@@ -85,8 +82,7 @@ export default function PublisherForm() {
 
     // ---------- CIRCUIT --------- //
     const compiledCircuit = await compileCircuit(noirSourceCode);
-    console.log("circuit compiled")
-    await setCurrentCompiledCircuit(compiledCircuit);
+
     //const barretenbergBackend = new BarretenbergBackend(compiledCircuit, { threads: navigator.hardwareConcurrency });
 
     const noir = new Noir(compiledCircuit);
@@ -102,9 +98,9 @@ export default function PublisherForm() {
       success: 'Witness generated',
       error: 'Error generating witness',
     });
-    if (!witness) return;*/
+    if (!witness) return;
 
-    /*const proofData = await toast.promise(barretenbergBackend.generateProof(witness), {
+    const proofData = await toast.promise(barretenbergBackend.generateProof(witness), {
       pending: 'Generating proof',
       success: 'Proof generated',
       error: 'Error generating proof',
@@ -112,7 +108,7 @@ export default function PublisherForm() {
 
     console.log(proofData)*/
 
-    let address = generateAndDeployContract()
+    let address = generateAndDeployContract(compiledCircuit)
 
     let dataTheReaderNeeds = {
       croppedImage,
@@ -120,42 +116,39 @@ export default function PublisherForm() {
       //proofData,
     }
 
+    console.log(dataTheReaderNeeds)
+
 
   };
 
-  const getSpinnerElements = () => {
-    const spinner = document.getElementById('spinner');
-    const submitBtn = document.getElementById('submit');
-    return [submitBtn, spinner];
-  };
 
-  const deactivateSpinner = () => {
-    let [submitBtn, spinner] = getSpinnerElements();
-    spinner.style.display = 'none';
-    submitBtn.disabled = false;
-  };
-
-  const activateSpinner = () => {
-    let [submitBtn, spinner] = getSpinnerElements();
-    spinner.style.display = 'inline-block';
-    submitBtn.disabled = true;
-  };
-
-  async function generateAndDeployContract() {
+  async function generateAndDeployContract(compiledCircuit) {
     console.log("Deploying")
-    if (!currentCompiledCircuit) {
+    if (!compiledCircuit) {
       console.log("Cannot generate contract because no circuit was provided")
       return;
     }
-    let contractSourceCode = await generateVerifierContract(currentCompiledCircuit)
+
+    const contractSourceCode = await toast.promise(generateVerifierContract(compiledCircuit), {
+      pending: 'Generating verifier contract',
+      success: 'Contract generated',
+      error: 'Error generating contract',
+    });
+
     console.log("Contract successfully created")
     console.log("Compiling and deploying contract")
-    let address = await compileAndDeploy(contractSourceCode)
+
+    const address  = await toast.promise(async() => await compileAndDeploy(contractSourceCode), {
+      pending: 'Deploying contract',
+      success: 'Contract deployed',
+      error: 'Error deploying contract',
+    });
 
     return address
   }
 
   const compileAndDeploy = async (contractSourceCode) => {
+    console.log("Contrato: ", contractSourceCode)
     const response = await fetch('/api/compile-and-deploy-contract', {
       method: 'POST',
       headers: {
@@ -175,7 +168,7 @@ export default function PublisherForm() {
       <h1 className={'title'}>Publisher</h1>
       <form className={'formContent'} onSubmit={onSubmit}>
         <ImageCropper onOriginalImage={handleOriginalImage} onCroppedImage={handleCroppedImage} />
-        <button type="submit" className='proveButton' disabled={!croppedImage}>Compile</button>
+        <button type="submit" className='proveButton' disabled={!croppedImage}>Compile and deploy</button>
       </form>
     </main>
   );

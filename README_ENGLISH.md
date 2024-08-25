@@ -83,3 +83,4 @@ You need to provide a `.env` file with a `PRIVATE_KEY` field for the wallet you 
 ### Deployed Contract Addresses during Development
 * 0x10243272641976490aabBc3D2e025fa161272297
 * 0xB3c7bFFAb7A0C39502053B23DaE571EB605A4bb4
+* 0x82e27db4513cdfe7c287333cb212cb6aa0bae67d
